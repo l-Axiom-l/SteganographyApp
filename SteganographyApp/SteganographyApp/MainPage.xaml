@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SteganographyApp.MainPage">
+
+    <StackLayout>
+        <Image x:Name="MainImage" HeightRequest="400" ></Image>
+        <Entry x:Name="MainText"></Entry>
+        <Button x:Name="HideTextButton" IsEnabled="False" Text="HideText"></Button>
+        <Button x:Name="GetTextButton" IsEnabled="False" Text="GetText"></Button>
+        <Button x:Name="SaveImageButton" IsEnabled="False" Text="SaveImage"></Button>
+        <Button x:Name="OpenImageButton" Text="OpenImage"></Button>
+        <Image x:Name="Loading" Source="Idle.gif" IsAnimationPlaying="True" HeightRequest="100" TranslationY="10"></Image>
+    </StackLayout>
+
+
+</ContentPage>
