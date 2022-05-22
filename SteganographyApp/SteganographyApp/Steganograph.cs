@@ -19,12 +19,6 @@ namespace Axiom.Encryption
         public Steganograph(Bitmap bitmap)
         {
             map = bitmap;
-            Start();
-        }
-
-        void Start()
-        {
-            Coordinates = GetCoordinates(map);
         }
 
         public Bitmap HideText(string Text)
@@ -32,6 +26,7 @@ namespace Axiom.Encryption
             //Man muss zuerst alle LSBs entfernen sonst funktioniert das entschlüsseln nicht.
             byte[] bytes = Encoding.ASCII.GetBytes(Text);
             int[] temp = BinaryConverter(bytes);
+            Coordinates = GetCoordinates(map, temp.Length);
 
             for (int i = 0; i < Coordinates.Count; i++)
             {
@@ -50,11 +45,11 @@ namespace Axiom.Encryption
                 }
             }
 
-            string bits = Convert.ToString(temp.Length, 2);
+            string bits = Convert.ToString(temp.Length, 2).PadLeft(32, '0');
             for (int i = 0; i < 32; i++)
             {
                 Vector2 v = Coordinates[i];
-                map.SetPixel((int)v.X, (int)v.Y, CalculateColorBlue(new Color(map.GetPixel((int)v.X, (int)v.Y)), (int)bits.ElementAt(i)));
+                map.SetPixel((int)v.X, (int)v.Y, CalculateColorBlue(new Color(map.GetPixel((int)v.X, (int)v.Y)), bits.ElementAt(i) - '0'));
             }
             return map;
         }
@@ -76,6 +71,7 @@ namespace Axiom.Encryption
             List<byte> temp = new List<byte>();
             List<int> bits = new List<int>();
             int lenght = GetLenght();
+            Coordinates = GetCoordinates(map, lenght);
 
             for (int i = 0; i < lenght; i++)
             {
@@ -107,6 +103,7 @@ namespace Axiom.Encryption
         int GetLenght()
         {
             string temp = "";
+            Coordinates = GetCoordinates(map, 32);
             for(int i = 0; i < 32; i++)
             {
                 Vector2 v = Coordinates[i];
@@ -153,7 +150,7 @@ namespace Axiom.Encryption
         //    return Color.Argb(color.A, color.R, temp, color.B);
         //}
 
-        List<Vector2> GetCoordinates(Bitmap image)
+        List<Vector2> GetCoordinates(Bitmap image, int lenght)
         {
             List<Vector2> temp = new List<Vector2>();
 
@@ -161,6 +158,9 @@ namespace Axiom.Encryption
                 for (int h = 0; h < image.Height; h++)
                 {
                     temp.Add(new Vector2(w, h));
+
+                    if (temp.Count >= lenght)
+                        break;
                 }
             return temp;
         }
