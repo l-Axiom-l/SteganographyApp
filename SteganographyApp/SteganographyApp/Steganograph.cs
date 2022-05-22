@@ -78,7 +78,7 @@ namespace Axiom.Encryption
                 Vector2 v = Coordinates[i];
                 Color color = new Color(map.GetPixel((int)v.X, (int)v.Y));
                 byte t = color.G;
-                bits.Add((int)Convert.ToString(color.G, 2).Last());
+                bits.Add((int)Convert.ToString(color.G, 2).Last() - '0');
             }
 
             List<List<int>> bytes = ChunkBy(bits, 8);
