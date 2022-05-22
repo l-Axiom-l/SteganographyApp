@@ -38,7 +38,7 @@ namespace Axiom.Encryption
                 Vector2 vector = Coordinates[i];
                 Color color = new Color(map.GetPixel((int)vector.X, (int)vector.Y));
 
-                if(temp.Length > i)
+                if (temp.Length > i)
                 {
                     color = CalculateColorGreen(color, temp[i]);
                     map.SetPixel((int)vector.X, (int)vector.Y, color);
@@ -48,6 +48,13 @@ namespace Axiom.Encryption
                     color = CalculateColorGreen(color, 0);
                     map.SetPixel((int)vector.X, (int)vector.Y, color);
                 }
+            }
+
+            string bits = Convert.ToString(temp.Length, 2);
+            for (int i = 0; i < 32; i++)
+            {
+                Vector2 v = Coordinates[i];
+                map.SetPixel((int)v.X, (int)v.Y, CalculateColorBlue(new Color(map.GetPixel((int)v.X, (int)v.Y)), (int)bits.ElementAt(i)));
             }
             return map;
         }
@@ -68,10 +75,12 @@ namespace Axiom.Encryption
         {
             List<byte> temp = new List<byte>();
             List<int> bits = new List<int>();
+            int lenght = GetLenght();
 
-            foreach (Vector2 vector in Coordinates)
+            for (int i = 0; i < lenght; i++)
             {
-                Color color = new Color(map.GetPixel((int)vector.X, (int)vector.Y));
+                Vector2 v = Coordinates[i];
+                Color color = new Color(map.GetPixel((int)v.X, (int)v.Y));
                 byte t = color.G;
                 bits.Add((int)Convert.ToString(color.G, 2).Last());
             }
@@ -95,6 +104,17 @@ namespace Axiom.Encryption
             return Encoding.ASCII.GetString(temp.ToArray()) ?? "null";
         }
 
+        int GetLenght()
+        {
+            string temp = "";
+            for(int i = 0; i < 32; i++)
+            {
+                Vector2 v = Coordinates[i];
+                temp += Convert.ToString(new Color(map.GetPixel((int)v.X, (int)v.Y)).B, 2).Last();
+            }
+            return Convert.ToInt32(temp, 2);
+        }
+
         Color CalculateColorGreen(Color color, int bit)
         {
             string temp = Convert.ToString(color.G, 2);
@@ -103,6 +123,26 @@ namespace Axiom.Encryption
 
             temp += bit.ToString();
             return Color.Argb(color.A, color.R, Convert.ToByte(temp, 2), color.B);
+        }
+
+        Color CalculateColorBlue(Color color, int bit)
+        {
+            string temp = Convert.ToString(color.B, 2);
+            temp = temp.PadLeft(8, '0')
+                       .Remove(7);
+
+            temp += bit.ToString();
+            return Color.Argb(color.A, color.R, color.G, Convert.ToByte(temp, 2));
+        }
+
+        Color CalculateColorRed(Color color, int bit)
+        {
+            string temp = Convert.ToString(color.R, 2);
+            temp = temp.PadLeft(8, '0')
+                       .Remove(7);
+
+            temp += bit.ToString();
+            return Color.Argb(color.A, Convert.ToByte(temp, 2), color.G, color.B);
         }
 
         //Color CalculateColorGreen(Color color, int bit)
