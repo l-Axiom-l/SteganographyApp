@@ -101,8 +101,10 @@ namespace SteganographyApp
                 return;
 
             await Permissions.RequestAsync<Permissions.StorageWrite>();
-
-            using (var os = new System.IO.FileStream(Android.OS.Environment.ExternalStorageDirectory + "/DCIM/temp.png", System.IO.FileMode.Create))
+            string name = await DisplayPromptAsync("FileName", "Enter the name of the file") + ".png";
+            Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory + "/DCIM/AxiomSoftware");
+            
+            using (var os = new System.IO.FileStream(Android.OS.Environment.ExternalStorageDirectory + "/DCIM/AxiomSoftware/" + name, System.IO.FileMode.Create))
             {
                 FinalImage.Compress(Bitmap.CompressFormat.Png, 100, os);
             }
