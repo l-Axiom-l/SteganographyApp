@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Axiom.Encryption;
 using System.IO;
 using Android.Graphics;
-using PCLStorage;
 using System.Threading;
 
 namespace SteganographyApp
